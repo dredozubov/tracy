@@ -6,6 +6,7 @@ module Debug.Tracy
   , ftracyM
   ) where
 
+import Control.Monad
 import Debug.Trace
 import System.Environment
 import System.IO.Unsafe
@@ -16,25 +17,23 @@ optional :: String -> String -> (a -> a) -> (a -> a)
 optional envVal val action = unsafePerformIO $ do
   enabled <- lookupEnv envVal
   return $ case enabled of
-    Just val -> action 
+    Just val -> action
     Nothing  -> id
 
-{-# NOINLINE makeTracy #-}
 makeTracy :: String -> String -> String -> (a -> a)
 makeTracy envVal val = optional envVal val . trace
 
-{-# NOINLINE tracy #-}
 tracy :: String -> a -> a
 tracy = makeTracy "DEBUG" "TRUE"
 
-{-# NOINLINE tracyM #-}
 tracyM :: (Monad m) => String -> m ()
 tracyM x = tracy x $ return ()
 
-{-# NOINLINE ftracy #-}
 ftracy :: Show a => (String -> String) -> a -> a
 ftracy f x = tracy (f $ show x) x
 
-{-# NOINLINE ftracyM #-}
+ftracyAp :: (Show a, Monad m) => (String -> String) -> a -> m a
+ftracyAp f x = ftracyM f x >> return x
+
 ftracyM :: (Show a, Monad m) => (String -> String) -> a -> m ()
 ftracyM f x = tracyM (f $ show x)
