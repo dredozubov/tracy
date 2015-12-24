@@ -4,6 +4,7 @@ module Debug.Tracy
   , tracyM
   , ftracy
   , ftracyM
+  , ftracyAp
   ) where
 
 import Control.Monad
