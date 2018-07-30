@@ -13,6 +13,6 @@ library
   exposed-modules:     Debug.Tracy
   -- other-modules:
   -- other-extensions:
-  build-depends:       base >=4.8 && <4.10
+  build-depends:       base >=4.8 && <4.12
   hs-source-dirs:      src
   default-language:    Haskell2010
